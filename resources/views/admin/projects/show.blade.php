@@ -25,8 +25,14 @@
   <div class="row g-5 mt-3">
     <div class="col-4">
       <p>
-        <strong>Tipo</strong><br>
+        <strong>Types</strong><br>
         {!! $project->getTypeBadge() !!}
+      </p>
+    </div>
+    <div class="col-4">
+      <p>
+        <strong>technology</strong><br>
+        {!! $project->getTechnologyBadge() !!}
       </p>
     </div>
     <div class="col-4">

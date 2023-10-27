@@ -33,7 +33,8 @@ class UpdateProjectRequest extends FormRequest
         Rule::unique('projects')->ignore($this->project->id)
       ],
       'content' => ['required', 'string'],
-      'type_id' => ['nullable', 'exists:types,id']
+      'type_id' => ['nullable', 'exists:types,id'],
+      'technologies'=>['nullable','exists:technologies,id']
 
     ];
   }
@@ -48,7 +49,8 @@ class UpdateProjectRequest extends FormRequest
       'content.required' => 'Il contenuto è obbligatorio',
       'content.string' => 'Il contenuto deve essere una stringa',
 
-      'type_id.exists' => 'il tipo inserita non è valida'
+      'type_id.exists' => 'il tipo inserita non è valida',
+      'technologies.exists' => 'la technologia inserita non è valida'
     ];
   }
 }
