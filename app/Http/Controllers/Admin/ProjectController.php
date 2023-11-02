@@ -13,6 +13,7 @@ use App\Models\Technology;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -56,6 +57,12 @@ class ProjectController extends Controller
 
     $project->fill($data);
     $project->slug = Str::slug($project->title);
+    // $project->save();
+
+        if ($request->hasFile('cover_image')) {
+            $cover_image_path = Storage::put("uploads/projects/cover_image", $data['cover_image']);
+            $project->cover_image = $cover_image_path;
+
     $project->save();
 
     if(Arr::exists($data,'technologies')){
@@ -65,6 +72,7 @@ class ProjectController extends Controller
     return redirect()->route('admin.projects.show', $project);
 
     }
+}
 
     /**
      * Display the specified resource.
@@ -105,6 +113,14 @@ class ProjectController extends Controller
 
     $project->fill($data);
     $project->slug = Str::slug($project->title);
+
+    if ($request->hasFile('cover_image')) {
+        if ($project->cover_image) {
+            Storage::delete($project->cover_image);
+        }
+        $cover_image_path = Storage::put('uploads/projects/cover_image', $data['cover_image']);
+        $project->cover_image = $cover_image_path;
+    }
     $project->save();
 
     if(Arr::exists($data,'technologies')){
@@ -128,6 +144,34 @@ class ProjectController extends Controller
     {
         $project->technologies()->detach();
         $project->delete();
+        if($project->cover_image) {
+            Storage::delete($project->cover_image);
+        }
     return redirect()->route('admin.projects.index');
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * return \Illuminate\Http\Response
+     */
+    public function trash(Project $project){
+
+        $projects = Project::orderByDesc('id')->onlyTrashed()->paginate(8);
+        return view('admin.projects.trash.index', compact('projects'));
+
+    }
+
+    public function forceDelete(int $id){
+        $project = Project::onlyTrashed()->findOrFail($id);
+        $project->technologies()->detach();
+        $project->forceDelete();
+        return redirect()->route('admin.projects.trash.index');
+    }
+
+    public function restore(int $id){
+        $project = Project::onlyTrashed()->findOrFail($id);
+        $project->restore();
+        return redirect()->route('admin.projects.trash.index');
+}
 }

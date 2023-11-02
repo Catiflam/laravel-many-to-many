@@ -23,6 +23,10 @@
 
 @section('content')
   <div class="row g-5 mt-3">
+
+    <div class="col">
+      <img src="{{asset('/storage/'.$project->cover_image)}}" class="img-fluid" alt="">
+      </div>
     <div class="col-4">
       <p>
         <strong>Types</strong><br>

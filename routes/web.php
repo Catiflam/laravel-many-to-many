@@ -28,8 +28,12 @@ Route::middleware(['auth', 'verified'])
 
     Route::get('/', [AdminPageController::class, 'index'])->name('home');
 
+    # ROTTE POST RESURCE
+    Route::get('/projects/trash', [ProjectController::class, 'trash'])->name('projects.trash.index');
+    Route::patch('/projects/trash/{project}/restore', [ProjectController::class, 'restore'])->name('projects.trash.restore');
+    Route::delete('/projects/trash/{project}/force-delete', [ProjectController::class,'forceDelete'])->name('projects.trash.force-delete');
     Route::resource('projects', ProjectController::class);
-
+    
   });
 
 require __DIR__ . '/auth.php';
