@@ -27,11 +27,8 @@ class UpdateProjectRequest extends FormRequest
     return [
       // 'title' => ['required', 'string', 'unique:posts,id,' . $this->post->id],
 
-      'title' => [
-        'required',
-        'string',
-        Rule::unique('projects')->ignore($this->project->id)
-      ],
+      'title' => ['required','string',Rule::unique('projects')->ignore($this->project->id)],
+      'cover_image'=>['nullable','image'],
       'content' => ['required', 'string'],
       'type_id' => ['nullable', 'exists:types,id'],
       'technologies'=>['nullable','exists:technologies,id']
@@ -45,6 +42,8 @@ class UpdateProjectRequest extends FormRequest
       'title.required' => 'Il titolo è obbligatorio',
       'title.string' => 'Il titolo deve essere una stringa',
       'title.unique' => 'Esiste già un post con questo titolo',
+
+      'cover_image'=>['Il file caricato deve essere un immagine'],
 
       'content.required' => 'Il contenuto è obbligatorio',
       'content.string' => 'Il contenuto deve essere una stringa',

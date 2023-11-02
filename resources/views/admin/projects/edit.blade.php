@@ -20,7 +20,7 @@
 @endsection
 
 @section('content')
-  @if ($errors->any())
+  {{-- @if ($errors->any())
     <div class="alert alert-danger" role="alert">
       Correggi i seguenti errori
 
@@ -30,7 +30,7 @@
         @endforeach
       </ul>
     </div>
-  @endif
+  @endif --}}
 
   <form method="POST" action="{{ route('admin.projects.update', $project) }}" class="row">
     @method('PATCH')
@@ -39,6 +39,30 @@
     <div class="col-12 mb-4">
       <label for="title" class="form-label">Titolo</label>
       <input type="text" name="title" id="title" class="form-control" value="{{ old('title') ?? $project->title }}">
+    </div>
+
+    
+    <div class="col-12 mb-4">
+      <div class="row">
+        <div class="col-8">
+          <label for="cover_image" class="form-label">Cover image</label>
+          <input type="file" name="cover_image" id="cover_image" class="form-controll @error('cover_image') is-invalid @enderror" value="{{old('cover_image')}}">
+          @error('cover_image')
+          <div class="invalid-feedback">
+            {{$message}}
+          </div>
+          @enderror
+          <div class="col-4 position-relative">
+            @if($project->cover_image)
+            <span class="position absolute top-0 start-100 translate-middle badge-rounder-pill bg-danger delete-image-button">
+              <i class="fa-solid fa-trash" id="delete-image-button"></i>
+              <span class="visually-hidden">delete image</span>
+            </span>
+            @endif
+            <img src="{{ asset('/storage/'. $project->cover_image) }}" class="img-fluid" id="cover_image_preview"> 
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="col-12 mb-4">
@@ -87,6 +111,21 @@
         Salva
       </button>
     </div>
-
   </form>
+@endsection
+
+@section('scripts')
+<script type="text/javascript">
+  const inputFileElement = document.getElementById('cover_image');
+  const coverImagePreview = document.getElementById('cover_image_preview');
+
+  if(!coverImagePreview.getAttribute('src')||coverImagePreview.getAttribute('src') == 'http://127.0.0.1:8000/storage'){
+    coverImagePreview.src = 'https://placehold.co/400';
+  }
+
+  inputFileElement.addEventListener('change', function(){
+    const [file] = this.files;
+    coverImagePreview.src = URL.createObjectURL(file);
+  })
+</script>
 @endsection

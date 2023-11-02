@@ -26,11 +26,8 @@ class StoreProjectRequest extends FormRequest
   {
     return [
 
-      'title' => [
-        'required',
-        'string',
-        Rule::unique('projects')
-      ],
+      'title' => ['required','string',Rule::unique('projects')],
+      'cover_image'=>['nullable','image'],
       'content' => ['required', 'string'],
       'type_id' => ['nullable', 'exists:types,id'],
       'technologies'=>['nullable','exists:technologies,id']
@@ -43,6 +40,8 @@ class StoreProjectRequest extends FormRequest
       'title.required' => 'Il titolo è obbligatorio',
       'title.string' => 'Il titolo deve essere una stringa',
       'title.unique' => 'Esiste già un post con questo titolo',
+
+      'cover_image'=>['Il file caricato deve essere un immagine'],
 
       'content.required' => 'Il contenuto è obbligatorio',
       'content.string' => 'Il contenuto deve essere una stringa',
